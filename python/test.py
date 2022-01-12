@@ -29,18 +29,20 @@ def split_actor():
     # print(list[0])
     return list
 
-
+# 处理文件中的字符串
 def pattern_str():
     are = re.compile(r'del_data_offline\sActorId\s(\d+)')
     mre = re.compile(r'del_mail_list\sSucc\sRet\s(\d+)')
     rre = re.compile(r'reduce_item_role\sRemainList\s(\[.*?\]\s=>\s\[.*?\])')
     ire = re.compile(r'reduce_item_db\sSucc.*?Uid\s(\d+).*?AddCount\s(-\d+)')
     # sys.stdout = open('output.txt', 'wt')
+
     wb = Workbook() # create a excel
     ws = wb.active
     ws.title = 'PetSoul Stone Data'
     ws.append(['ActorId', 'MailNum', 'RoleData', 'ItemData'])
-    row = 2
+    row = 2 # 从第二行开始填数据
+
     for actor in split_actor()[:1]:
         actorid = int(re.findall(are, actor)[0])
 
@@ -61,11 +63,15 @@ def pattern_str():
         for (id, cnt) in itemlist0:
             itemlist1.append({int(id), int(cnt)})
         itemlist = str(itemlist1)
+
+        # 将匹配到的数据写入表格
         ws.cell(row=row, column=1, value=str(actorid))
         ws.cell(row=row, column=2, value=mailnum)
         ws.cell(row=row, column=3, value=roledata)
         ws.cell(row=row, column=4, value=itemlist)
         print('ActorId:', actorid, 'Mail:', mailnum, roledata, itemlist)
+
+    # 保存文件
     wb.save(filename = 'out.xlsx')
 
 if __name__ == '__main__':
