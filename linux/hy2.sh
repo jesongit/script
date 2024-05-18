@@ -1,5 +1,6 @@
 #!/bin/bash
 # curl -O https://raw.githubusercontent.com/jesongit/script/main/linux/hy2.sh && bash hy2.sh
+# 详细配置参考: https://hysteria.network/zh/docs/getting-started/Installation/
 cd /root
 
 # 打印获取的参数，确认正确
@@ -27,7 +28,7 @@ fi
 if [ "$confirm" == "y" ]; then
     echo "开始安装docker"
     # 一键安装 docker
-    # curl -sSL https://get.docker.com/ | sh
+    curl -sSL https://get.docker.com/ | sh
 fi
 
 echo "开始安装hy2"
@@ -63,10 +64,14 @@ masquerade:                     # 下面的可以不需要
   proxy:
     url: https://www.baidu.com  # 伪装网站
     rewriteHost: true" > hysteria.yaml
-# iptables -t nat -A PREROUTING -i eth0 -p udp --dport $min_port:$max_port -j DNAT --to-destination :$port
-# docker up -d
-# docker logs hysteria
+# 设置端口跳跃
+iptables -t nat -A PREROUTING -i eth0 -p udp --dport $min_port:$max_port -j DNAT --to-destination :$port
+# 启动docker容器
+docker compose up -d
+# 打印日志
+docker logs hysteria
 
+# 打印 Clash 配置
 echo "clash config:
 - name: hysteria
 type: hysteria
