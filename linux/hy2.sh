@@ -74,7 +74,7 @@ docker logs hysteria
 # 打印 Clash 配置
 echo "clash config:
 - name: hysteria
-type: hysteria
+type: hysteria2
 server: $domain
 port: $port
 ports: $min_port-$max_port/$port
