@@ -1,0 +1,33 @@
+version: "3.8"
+services:
+  dockge:
+    image: louislam/dockge:1
+    container_name: dockage
+    restart: always
+    ports:
+      - 5001:5001
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /root/docker/dockge/data:/app/data
+      - /root/docker/dockge/stacks:/root/docker/dockge/stacks
+    environment:
+      - DOCKGE_STACKS_DIR=/root/docker/dockge/stacks
+  looking-glass-server:
+    container_name: looking-glass
+    restart: always
+    network_mode: host
+    image: wikihostinc/looking-glass-server
+  3x-ui:
+    stdin_open: true
+    tty: true
+    environment:
+      - XRAY_VMESS_AEAD_FORCED=false
+    volumes:
+      - /root/docker/xray/db/:/etc/x-ui/
+      - /root/docker/xray/cert/:/root/cert/
+    ports:
+      - 2053:2053
+      - 50443:50443
+    restart: always
+    container_name: 3x-ui
+    image: bigbugcc/3x-ui:latest
