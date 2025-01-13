@@ -159,7 +159,7 @@ function fetchRedLog(torrent_id) {
     const parser = new DOMParser();
     const doc = parser.parseFromString(htmlString, 'text/html');
     const textContent = doc.body.textContent || doc.body.innerText;
-    const textList = textContent.split(/Score.*?\)/).filter(text => text.trim() != '')
+    const textList = textContent.split(/Score:.*?\)/).filter(text => text.trim() != '')
     console.log(textList.map(text => text.length))
     console.log('日志长度', textList.length)
     torrent.log_num = textList.length;
@@ -177,7 +177,7 @@ function fetchRedTorrent(btn) {
   // 下载文件
   torrent = {file_num: 0, torrent_id: torrent_id, from: location.hostname, href: location.href}
   fetchFile('json', 'https://redacted.sh/ajax.php?action=torrent&id=' + torrent_id)
-  fetchFile('torrent', btn.parentElement.firstElementChild.href)
+  fetchFile('torrent', btn.previousElementSibling.previousElementSibling.previousElementSibling.href)
 
   // 获取日志
   let logBtn = btn.parentElement.parentElement.parentElement.nextElementSibling.querySelector("a:nth-child(2)")
@@ -367,7 +367,13 @@ function lemonhd() {
     });
     document.querySelector("div.nav-list").appendChild(btn)
   }
+
+  let select = document.querySelector("select[name=search_type]")
+  if(select) {
+    select.selectedIndex = 3
+  }
 }
+
 
 (function() {
   'use strict';
